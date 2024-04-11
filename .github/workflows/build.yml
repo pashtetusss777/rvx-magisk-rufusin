@@ -152,9 +152,9 @@ jobs:
         run: |
           DELIM="$(openssl rand -hex 8)"
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build_rvxb.md >> "$GITHUB_OUTPUT"
+          cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build_rvxb.md build_rvxb.tmp
+          cp -f build.md build_rvxb.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -247,9 +247,9 @@ jobs:
         run: |
           DELIM="$(openssl rand -hex 8)"
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build_rvxr.md >> "$GITHUB_OUTPUT"
+          cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build_rvxr.md build_rvxr.tmp
+          cp -f build.md build_rvxr.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -342,9 +342,9 @@ jobs:
         run: |
           DELIM="$(openssl rand -hex 8)"
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build_rvxab.md >> "$GITHUB_OUTPUT"
+          cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build_rvxab.md build_rvxab.tmp
+          cp -f build.md build_rvxab.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -439,7 +439,7 @@ jobs:
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build_rvxar.md build_rvxar.tmp
+          cp -f build.md build_rvxar.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -534,7 +534,7 @@ jobs:
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build_rvxm.md build_rvxm.tmp
+          cp -f build.md build_rvxm.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
