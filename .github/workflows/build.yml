@@ -141,7 +141,7 @@ jobs:
           echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
-        run: ./build.sh config.toml
+        run: ./build.sh config.toml rvxb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: 'IgorTHh1337/rvxb-magisk-lol'
@@ -152,9 +152,9 @@ jobs:
         run: |
           DELIM="$(openssl rand -hex 8)"
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build.md >> "$GITHUB_OUTPUT"
+          cat build_rvxb.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build.md build.tmp
+          cp -f build_rvxb.md build_rvxb.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -162,7 +162,6 @@ jobs:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./build/*
-          release_name: anddea ReVanced RevBlue Icon
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
@@ -171,13 +170,13 @@ jobs:
         id: update_config
         run: |
           git checkout -f update || git switch --discard-changes --orphan update
-          cp -f build.tmp build.md
+          cp -f build_rvxb.tmp build_rvxb.md
           get_update_json() {
             echo "{
             \"version\": \"$1\",
             \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE}},
             \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxb-magisk-lol/update/build.md\"
+            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build_rvxb.md\"
           }"
           }
 
@@ -189,18 +188,18 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/IgorTHh1337/rvxb-magisk-lol/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
 
-          find . -name "*-update.json" | grep . || : >dummy-update.json
+          find . -name "*-rvxb-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: update
           skip_checkout: true
-          file_pattern: build.md *-update.json
+          file_pattern: build.md *-rvxb-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxr:
     needs: build_rvxb
@@ -237,7 +236,7 @@ jobs:
           echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
-        run: ./build.sh config.toml
+        run: ./build.sh config.toml rvxr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: 'IgorTHh1337/rvxr-magisk-lol'
@@ -248,9 +247,9 @@ jobs:
         run: |
           DELIM="$(openssl rand -hex 8)"
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build.md >> "$GITHUB_OUTPUT"
+          cat build_rvxr.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build.md build.tmp
+          cp -f build_rvxr.md build_rvxr.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -258,7 +257,6 @@ jobs:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./build/*
-          release_name: anddea ReVanced RevRed Icon
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
@@ -267,13 +265,13 @@ jobs:
         id: update_config
         run: |
           git checkout -f update || git switch --discard-changes --orphan update
-          cp -f build.tmp build.md
+          cp -f build_rvxr.tmp build_rvxr.md
           get_update_json() {
             echo "{
             \"version\": \"$1\",
             \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE}},
             \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxr-magisk-lol/update/build.md\"
+            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build_rvxr.md\"
           }"
           }
 
@@ -285,18 +283,18 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/IgorTHh1337/rvxr-magisk-lol/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
 
-          find . -name "*-update.json" | grep . || : >dummy-update.json
+          find . -name "*-rvxr-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: update
           skip_checkout: true
-          file_pattern: build.md *-update.json
+          file_pattern: build.md *-rvxr-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxab:
     needs: build_rvxr
@@ -333,7 +331,7 @@ jobs:
           echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
-        run: ./build.sh config.toml
+        run: ./build.sh config.toml rvxab
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: 'IgorTHh1337/rvxab-magisk-lol'
@@ -344,9 +342,9 @@ jobs:
         run: |
           DELIM="$(openssl rand -hex 8)"
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
-          cat build.md >> "$GITHUB_OUTPUT"
+          cat build_rvxab.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build.md build.tmp
+          cp -f build_rvxab.md build_rvxab.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -354,7 +352,6 @@ jobs:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./build/*
-          release_name: anddea ReVanced Afn Blue Icon
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
@@ -363,13 +360,13 @@ jobs:
         id: update_config
         run: |
           git checkout -f update || git switch --discard-changes --orphan update
-          cp -f build.tmp build.md
+          cp -f build_rvxab.tmp build_rvxab.md
           get_update_json() {
             echo "{
             \"version\": \"$1\",
             \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE}},
             \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxab-magisk-lol/update/build.md\"
+            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build_rvxab.md\"
           }"
           }
 
@@ -381,18 +378,18 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/IgorTHh1337/rvxab-magisk-lol/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
 
-          find . -name "*-update.json" | grep . || : >dummy-update.json
+          find . -name "*-rvxab-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: update
           skip_checkout: true
-          file_pattern: build.md *-update.json
+          file_pattern: build.md *-rvxab-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxar:
     needs: build_rvxab
@@ -429,7 +426,7 @@ jobs:
           echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
-        run: ./build.sh config.toml
+        run: ./build.sh config.toml rvxar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: 'IgorTHh1337/rvxar-magisk-lol'
@@ -442,7 +439,7 @@ jobs:
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build.md build.tmp
+          cp -f build_rvxar.md build_rvxar.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -450,7 +447,6 @@ jobs:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./build/*
-          release_name: anddea ReVanced Afn Red Icon
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
@@ -465,7 +461,7 @@ jobs:
             \"version\": \"$1\",
             \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE}},
             \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxar-magisk-lol/update/build.md\"
+            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build_rvxar.md\"
           }"
           }
 
@@ -477,18 +473,18 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/IgorTHh1337/rvxar-magisk-lol/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
 
-          find . -name "*-update.json" | grep . || : >dummy-update.json
+          find . -name "*-rvxar-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: update
           skip_checkout: true
-          file_pattern: build.md *-update.json
+          file_pattern: build.md *-rvxar-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxm:
     needs: build_rvxar
@@ -525,7 +521,7 @@ jobs:
           echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
-        run: ./build.sh config.toml
+        run: ./build.sh config.toml rvxm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: 'IgorTHh1337/rvxm-magisk-lol'
@@ -538,7 +534,7 @@ jobs:
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          cp -f build.md build.tmp
+          cp -f build_rvxm.md build_rvxm.tmp
 
       - name: Upload modules to release
         uses: svenstaro/upload-release-action@v2
@@ -546,7 +542,6 @@ jobs:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./build/*
-          release_name: anddea ReVanced MMT Icon
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
@@ -561,7 +556,7 @@ jobs:
             \"version\": \"$1\",
             \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE}},
             \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxm-magisk-lol/update/build.md\"
+            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build_rvxm.md\"
           }"
           }
 
@@ -573,16 +568,16 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/IgorTHh1337/rvxm-magisk-lol/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
 
-          find . -name "*-update.json" | grep . || : >dummy-update.json
+          find . -name "*-rvxm-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: update
           skip_checkout: true
-          file_pattern: build.md *-update.json
+          file_pattern: build.md *-rvxm-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
