@@ -9,24 +9,23 @@ on:
   push:
     branches:
       - main
-
   workflow_dispatch:
 
 jobs:
-  run:
-    permissions: write-all
+  build_modules:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: "17"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Update config
         if: ${{ inputs.from_ci }}
@@ -40,18 +39,16 @@ jobs:
 
       - name: Get next version code
         id: next_ver_code
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
           if [ -z "$TAG" ]; then TAG=0; fi
-          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+          echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
         run: ./build.sh config.toml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: $GITHUB_REPOSITORY
+          GITHUB_REPOSITORY: ${{ github.repository }}
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
 
       - name: Get output
@@ -69,7 +66,7 @@ jobs:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./build/*
-          release_name: anddea ReVanced OG Icon
+          release_name: anddea ReVanced Modules
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
@@ -82,9 +79,9 @@ jobs:
           get_update_json() {
             echo "{
             \"version\": \"$1\",
-            \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE}},
+            \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }},
             \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build.md\"
+            \"changelog\": \"https://raw.githubusercontent.com/${{ github.repository }}/update/build.md\"
           }"
           }
 
@@ -96,7 +93,7 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DLURL="${{ github.server_url }}/${{ github.repository }}/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
@@ -110,20 +107,21 @@ jobs:
           file_pattern: build.md *-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxb:
-    permissions: write-all
+    needs: build_modules
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: "17"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: 'https://github.com/IgorTHh1337/rvxb-magisk-lol'
           fetch-depth: 0
           submodules: true
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Update config
         if: ${{ inputs.from_ci }}
@@ -137,12 +135,10 @@ jobs:
 
       - name: Get next version code
         id: next_ver_code
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
           if [ -z "$TAG" ]; then TAG=0; fi
-          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+          echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
         run: ./build.sh config.toml
@@ -207,19 +203,20 @@ jobs:
           file_pattern: build.md *-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxr:
-    permissions: write-all
+    needs: build_rvxb
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: "17"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Update config
         if: ${{ inputs.from_ci }}
@@ -233,18 +230,16 @@ jobs:
 
       - name: Get next version code
         id: next_ver_code
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
           if [ -z "$TAG" ]; then TAG=0; fi
-          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+          echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
         run: ./build.sh config.toml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: 'IgorTHh1337/rvxb-magisk-lol'
+          GITHUB_REPOSITORY: 'IgorTHh1337/rvxr-magisk-lol'
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
 
       - name: Get output
@@ -277,10 +272,10 @@ jobs:
             \"version\": \"$1\",
             \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE}},
             \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxb-magisk-lol/update/build.md\"
+            \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxr-magisk-lol/update/build.md\"
           }"
           }
-          
+
           cd build || { echo "build folder not found"; exit 1; }
           for OUTPUT in *magisk*.zip; do
             [ "$OUTPUT" = "*magisk*.zip" ] && continue
@@ -289,11 +284,11 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/IgorTHh1337/rvxb-magisk-lol/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DLURL="$GITHUB_SERVER_URL/IgorTHh1337/rvxr-magisk-lol/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
-          
+
           find . -name "*-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -303,19 +298,20 @@ jobs:
           file_pattern: build.md *-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxab:
-    permissions: write-all
+    needs: build_rvxr
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: "17"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Update config
         if: ${{ inputs.from_ci }}
@@ -329,12 +325,10 @@ jobs:
 
       - name: Get next version code
         id: next_ver_code
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
           if [ -z "$TAG" ]; then TAG=0; fi
-          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+          echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
         run: ./build.sh config.toml
@@ -376,7 +370,7 @@ jobs:
             \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxab-magisk-lol/update/build.md\"
           }"
           }
-          
+
           cd build || { echo "build folder not found"; exit 1; }
           for OUTPUT in *magisk*.zip; do
             [ "$OUTPUT" = "*magisk*.zip" ] && continue
@@ -389,7 +383,7 @@ jobs:
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
-          
+
           find . -name "*-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -399,19 +393,20 @@ jobs:
           file_pattern: build.md *-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxar:
-    permissions: write-all
+    needs: build_rvxab
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: "17"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Update config
         if: ${{ inputs.from_ci }}
@@ -425,12 +420,10 @@ jobs:
 
       - name: Get next version code
         id: next_ver_code
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
           if [ -z "$TAG" ]; then TAG=0; fi
-          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+          echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
         run: ./build.sh config.toml
@@ -472,7 +465,7 @@ jobs:
             \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxar-magisk-lol/update/build.md\"
           }"
           }
-          
+
           cd build || { echo "build folder not found"; exit 1; }
           for OUTPUT in *magisk*.zip; do
             [ "$OUTPUT" = "*magisk*.zip" ] && continue
@@ -485,7 +478,7 @@ jobs:
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
-          
+
           find . -name "*-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -495,19 +488,20 @@ jobs:
           file_pattern: build.md *-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxm:
-    permissions: write-all
+    needs: build_rvxar
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: "17"
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Update config
         if: ${{ inputs.from_ci }}
@@ -521,12 +515,10 @@ jobs:
 
       - name: Get next version code
         id: next_ver_code
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
           if [ -z "$TAG" ]; then TAG=0; fi
-          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+          echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
 
       - name: Build modules/APKs
         run: ./build.sh config.toml
@@ -568,7 +560,7 @@ jobs:
             \"changelog\": \"https://raw.githubusercontent.com/IgorTHh1337/rvxm-magisk-lol/update/build.md\"
           }"
           }
-          
+
           cd build || { echo "build folder not found"; exit 1; }
           for OUTPUT in *magisk*.zip; do
             [ "$OUTPUT" = "*magisk*.zip" ] && continue
@@ -581,7 +573,7 @@ jobs:
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
-          
+
           find . -name "*-update.json" | grep . || : >dummy-update.json
 
       - uses: stefanzweifel/git-auto-commit-action@v5
