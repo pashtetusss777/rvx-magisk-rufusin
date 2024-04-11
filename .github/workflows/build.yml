@@ -113,7 +113,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          repository: 'https://github.com/IgorTHh1337/rvxb-magisk-lol'
+          repository: 'IgorTHh1337/rvxb-magisk-lol'
           fetch-depth: 0
           submodules: true
 
@@ -209,6 +209,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: 'IgorTHh1337/rvxr-magisk-lol'
           fetch-depth: 0
           submodules: true
 
@@ -304,6 +305,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: 'IgorTHh1337/rvxab-magisk-lol'
           fetch-depth: 0
           submodules: true
 
@@ -399,6 +401,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: 'IgorTHh1337/rvxar-magisk-lol'
           fetch-depth: 0
           submodules: true
 
@@ -494,6 +497,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: 'IgorTHh1337/rvxm-magisk-lol'
           fetch-depth: 0
           submodules: true
 
