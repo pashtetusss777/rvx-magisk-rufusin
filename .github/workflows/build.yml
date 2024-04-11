@@ -6,6 +6,10 @@ on:
         type: boolean
         required: false
         default: true
+  push:
+    branches:
+      - main
+      - update
 
   workflow_dispatch:
 
