@@ -107,7 +107,7 @@ jobs:
 #          file_pattern: build.md *-update.json
 #          commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
   build_rvxb:
-    needs: build_modules
+    # needs: build_modules
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -192,9 +192,12 @@ jobs:
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
-
-          ls *.json
           find . -name "*-rvxb-update.json" | grep . || : >dummy-update.json
+      
+      - name: output test
+        run: ls
+      
+      - run: sleep 10000
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
