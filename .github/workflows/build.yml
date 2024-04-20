@@ -103,7 +103,7 @@ jobs:
 
 
      - name: Update git
-        run: |
+       run: |
          git fetch origin update
          git pull origin update
 
