@@ -1,5 +1,5 @@
-YouTube: 19.11.38  
 YouTubeMusic: 6.48.51  
+YouTube: 19.11.38  
 
 Install [Microg](https://github.com/ReVanced/GmsCore/releases) for non-root YouTube and YT Music APKs  
 Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach root ReVanced YouTube and YT Music from Play Store  
@@ -8,6 +8,6 @@ Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach root ReVanc
 
 Changelog:  
 CLI: j-hc/revanced-cli-4.6.0-all.jar  
-Integrations: anddea/revanced-integrations-0.151.0-dev.7.apk  
-Patches: anddea/revanced-patches-2.224.0-dev.8.jar  
-[Changelog](https://github.com/anddea/revanced-patches/releases/tag/vdev.8)  
+Integrations: anddea/revanced-integrations-0.151.0-dev.10.apk  
+Patches: anddea/revanced-patches-2.224.0-dev.10.jar  
+[Changelog](https://github.com/anddea/revanced-patches/releases/tag/vdev.10)  
