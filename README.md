@@ -43,12 +43,12 @@ also see here [`CONFIG.md`](./CONFIG.md)
 ## Building Locally
 ### On Termux
 ```console
-bash <(curl -sSf https://raw.githubusercontent.com/IgorTHh1337/rvx-magisk-idk/main/build-termux.sh)
+bash <(curl -sSf https://raw.githubusercontent.com/IgorTHh1337/rvx-magisk-lol/main/build-termux.sh)
 ```
 
 ### On Desktop
 ```console
-$ git clone https://github.com/IgorTHh1337/rvx-magisk-idk
+$ git clone https://github.com/IgorTHh1337/rvx-magisk-lol
 $ cd revanced-magisk-module
 $ ./build.sh
 ```
