@@ -40,13 +40,16 @@ jobs:
 
      - name: Get next version code
        id: next_ver_code
+       env:
+         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        run: |
          TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
          if [ -z "$TAG" ]; then TAG=0; fi
-         echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
+         echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
 
      - name: Build modules/APKs
-       run: ./build.sh config.toml original
+       run: ./build.sh config.toml original options.json
+
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          GITHUB_REPOSITORY: ${{ github.repository }}
@@ -143,13 +146,15 @@ jobs:
 
       - name: Get next version code
         id: next_ver_code
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
           if [ -z "$TAG" ]; then TAG=0; fi
-          echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
+          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
 
       - name: Build modules/APKs
-        run: ./build.sh config_rvxb.toml rvxb
+        run: ./build.sh config_rvxb.toml rvxb options_rvxb.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
@@ -247,13 +252,15 @@ jobs:
 
      - name: Get next version code
        id: next_ver_code
+       env:
+         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        run: |
          TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
          if [ -z "$TAG" ]; then TAG=0; fi
-         echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
+         echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
 
      - name: Build modules/APKs
-       run: ./build.sh config_rvxr.toml rvxr
+       run: ./build.sh config_rvxr.toml rvxr options_rvxr.json
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          GITHUB_REPOSITORY: ${{ github.repository }}
@@ -346,16 +353,18 @@ jobs:
              echo "$UPDATE_CFG" > config_rvxab.toml
            fi
          fi
-
+      
      - name: Get next version code
        id: next_ver_code
+       env:
+         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        run: |
          TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
          if [ -z "$TAG" ]; then TAG=0; fi
-         echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
+         echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
 
      - name: Build modules/APKs
-       run: ./build.sh config_rvxab.toml rvxab
+       run: ./build.sh config_rvxab.toml rvxab options_rvxab.json
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          GITHUB_REPOSITORY: ${{ github.repository }}
@@ -390,7 +399,7 @@ jobs:
          get_update_json() {
            echo "{
            \"version\": \"$1\",
-           \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE}},
+           \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }},
            \"zipUrl\": \"$2\",
            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build_rvxab.md\"
          }"
@@ -451,13 +460,15 @@ jobs:
 
      - name: Get next version code
        id: next_ver_code
+       env:
+         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        run: |
          TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
          if [ -z "$TAG" ]; then TAG=0; fi
-         echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
+         echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
 
      - name: Build modules/APKs
-       run: ./build.sh config.toml rvxar
+       run: ./build.sh config_rvxar.toml rvxar options_rvxar.json
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          GITHUB_REPOSITORY: ${{ github.repository }}
@@ -553,13 +564,15 @@ jobs:
 
      - name: Get next version code
        id: next_ver_code
+       env:
+         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        run: |
          TAG=$(gh release list -L 1 | awk -F '\t' '{print $3}')
          if [ -z "$TAG" ]; then TAG=0; fi
-         echo "::set-output name=NEXT_VER_CODE::$((TAG + 1))"
+         echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
 
      - name: Build modules/APKs
-       run: ./build.sh config_rvxm.toml rvxm
+       run: ./build.sh config_rvxm.toml rvxm options_rvxm.json
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          GITHUB_REPOSITORY: ${{ github.repository }}
