@@ -11,6 +11,7 @@ patches-source = "rufusin/revanced-patches"
 integrations-source = "rufusin/revanced-integrations"
 rv-brand = "rufusin ReVanced RevRed Icon"
 build-mode = "both"
+version = "19.16.38"
 included-patches = "'Custom branding icon YouTube' 'MaterialYou'"
 
 [YouTube Music]
